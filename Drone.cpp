@@ -28,6 +28,7 @@ uint32_t Drone::GetId() const { return m_id; }
 void Drone::SetMalicious(bool is_malicious) { m_is_malicious = is_malicious; }
 void Drone::SetInitialPosition(Vector3d pos) { m_true_position = pos; }
 void Drone::SetTrajectory(std::function<Vector3d(double)> traj_func) { m_trajectory = traj_func; }
+bool Drone::IsMalicious() { return m_is_malicious; }
 
 void Drone::UpdatePosition(double time) {
     if (m_trajectory) m_true_position = m_trajectory(time);

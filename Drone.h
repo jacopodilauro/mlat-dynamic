@@ -26,6 +26,7 @@ public:
     uint32_t GetId() const;
 
     void SetMalicious(bool is_malicious);
+    bool IsMalicious();
     
     // Gestione Movimento
     void SetInitialPosition(Vector3d pos);
