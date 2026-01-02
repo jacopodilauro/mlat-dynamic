@@ -1,70 +1,116 @@
 <h1 align="center">📡 TDoA Multilateration for UWB Swarm Simulation & Security</h1>
 
-A high-fidelity simulation environment based on **ns-3** designed to study: **Multilateration, Time Difference of Arrival (TDoA)** localization, clock synchronization, and security mechanisms within dynamic drone swarms.
+<p align="center">
+  <strong>High-fidelity ns-3 simulation for distributed localization, clock synchronization, and GPS spoofing detection.</strong>
+</p>
 
-This project implements a distributed **Extended Kalman Filter (EKF)** to estimate the positions of neighboring drones using Ultra-Wideband (UWB) ranging frames. It also features a security layer capable of detecting **GPS Spoofing attacks** by analyzing the discrepancy between claimed GPS positions and the physics-based TDoA estimates.
-
----
-
-## Key Features
-
-* **Realistic UWB Channel Model**: Custom implementation (`UWBChannel`) accounting for:
-    * Path Loss & Shadowing (Log-distance model).
-    * Line-of-Sight (LOS) vs Non-Line-of-Sight (NLOS) probability.
-    * Ranging errors and delay spread based on environmental conditions.
-* **Distributed State Estimation**:
-    * Each drone runs a local bank of **Extended Kalman Filters (EKF)**.
-    * Estimates neighbor positions (X, Y, Z) and clock bias in real-time.
-* **Clock Synchronization**:
-    * Simulates hardware clock drift (physical layer).
-    * Implements a software-based synchronization algorithm using a Master Anchor approach to correct offsets.
-* **Security & Threat Simulation**:
-    * **Attack Simulation**: Ability to inject malicious behavior (e.g., GPS spoofing where a drone lies about its position).
-    * **Anomaly Detection**: Automated alarm system that triggers when the "Discrepancy" (residual) between the claimed GPS position and the TDoA estimate exceeds a safety threshold.
-* **Dynamic 3D Trajectories**:
-    * Supports complex formation flying scenarios (e.g., Octahedron Swarm, Atomic Shell, Figure-8).
+<p align="center">
+<img width="360" height="300" alt="3 _Analisi_Comparativa_Target_0_img2" src="https://github.com/user-attachments/assets/cdaf00f2-25f8-474d-ba3a-2ec90b706da5" />
+</p>
 
 ---
 
-## Dependencies
+## 📖 Overview
 
-To build and run this simulation, you need the following installed on your system:
+This project implements a **Distributed Extended Kalman Filter (EKF)** framework within **ns-3** to simulate autonomous drone swarms utilizing **Ultra-Wideband (UWB)** technology. It focuses on **Time Difference of Arrival (TDoA)** multilateration to estimate relative positions without relying solely on GPS.
 
-* **[ns-3](https://www.nsnam.org/)** (Network Simulator 3)
-    * Required modules: `core`, `network`, `mobility`, `wifi`, `applications`.
-* **[Eigen3](https://eigen.tuxfamily.org/)**: For matrix operations in the EKF.
-* **CMake** (version 3.3 or higher).
-* **Python 3** (for data analysis and plotting).
-    * Libraries: `pandas`, `matplotlib`, `numpy`.
+Crucially, it includes a **Cyber-Physical Security Layer** designed to detect **GPS Spoofing attacks**. By cross-referencing claimed GPS positions with physics-based TDoA ranging data, the system identifies anomalies and triggers alarms when a drone's reported position contradicts the UWB measurements.
+
+### Key Capabilities
+* **Physics-Based UWB Channel**: Realistic propagation modeling including Path Loss, Shadowing, and LOS/NLOS stochastic determination.
+* **Distributed Estimation**: Each drone runs an independent EKF bank to track neighbors (Position $x,y,z$ + Clock Bias).
+* **Clock Synchronization**: Implements a Master Anchor synchronization scheme to mitigate hardware clock drift.
+* **Security & Anomaly Detection**: Real-time detection of malicious nodes broadcasting false GPS coordinates.
 
 ---
 
-## Installation & Build
+## 📊 Simulation Results
+
+### 1. 3D Trajectory Reconstruction vs. Attack
+The system tracks the true trajectory of the target. When a **GPS Spoofing attack** occurs (Red dashed line), the EKF estimates (Blue/colored lines) maintain the physics-based trajectory, revealing the discrepancy.
+
+<p align="center">
+  <img src="images/3._Traiettorie_3D_Paper.png" alt="Trajectory Reconstruction" width="80%">
+</p>
+
+### 2. Security Alarm System
+The plot below demonstrates the **Anomaly Detection** mechanism. 
+* **Top:** The estimation error remains low during normal operations.
+* **Bottom:** When the attack starts (approx. t=200s), the **Discrepancy (Residual)** between the claimed GPS and the TDoA estimate spikes, triggering the **ALARM ACTIVE** state (Red Zone).
+
+<p align="center">
+  <img src="images/allarme.png" alt="Alarm and Error Analysis" width="90%">
+</p>
+
+---
+
+## 🛠 Technical Architecture
+
+### The UWB Channel Model
+Custom `UWBChannel` class simulating environmental effects based on IEEE 802.15.4a standards:
+* **LOS Probability**: $P_{LOS} = \exp(-d / \gamma)$ based on environment (Indoor/Outdoor).
+* **Ranging Error**: Gaussian noise for LOS, plus Biased Noise for NLOS conditions.
+
+### Extended Kalman Filter (EKF) State
+Each drone maintains a state vector $\mathbf{x}$ for every neighbor:
+$$\mathbf{x} = [x, y, z, v_x, v_y, v_z, \delta t]^T$$
+Where $\delta t$ represents the clock bias relative to the observer.
+
+### Security Logic
+The node calculates the **Residual ($\epsilon$)**:
+$$\epsilon = || \mathbf{P}_{estimated} - \mathbf{P}_{claimed} ||$$
+If $\epsilon > \text{Threshold}_{safety}$ consistently, the node is flagged as **Malicious**.
+
+---
+
+## 📦 Dependencies
+
+To build and run this simulation, ensure you have the following installed:
+
+* **[ns-3](https://www.nsnam.org/)** (v3.30+ recommended)
+    * Modules: `core`, `network`, `mobility`, `wifi`, `applications`.
+* **[Eigen3](https://eigen.tuxfamily.org/)**: Required for EKF matrix operations.
+* **CMake** (v3.3+).
+* **Python 3** (Matplotlib, Pandas, NumPy) for plotting.
+
+---
+
+## 🚀 Installation & Usage
 
 1.  **Clone the repository**:
     ```bash
-    git clone https://github.com/jacopodilauro/mlat-dynamic
+    git clone [https://github.com/jacopodilauro/mlat-dynamic](https://github.com/jacopodilauro/mlat-dynamic)
     ```
 
-2.  Using ns3
+2.  **Move to ns-3 directory**:
+    Assuming you have ns-3 installed:
     ```bash
-    cd ns3/ns-3-allinone/ns-3.46.1
+    cp -r mlat-dynamic/* ns-3-allinone/ns-3.dev/scratch/
+    cd ns-3-allinone/ns-3.dev/
     ```
 
-3.  **Configure with CMake**:
-    Ensure `ns-3` libraries are visible to CMake (you may need to adjust paths depending on your ns-3 installation).
+3.  **Configure & Build**:
     ```bash
+    ./ns3 configure --enable-examples --enable-tests
     ./ns3 build
     ```
 
-4.  **Compile**:
+4.  **Run the Simulation**:
     ```bash
-    ./build/tdoa-uwb-run
+    ./ns3 run "tdoa-uwb-run"
     ```
-    
-If you wnat to see the result in graphic mode, do:
-5.  **python**:
-   ```bash
-     python3 scratch/4.5_solo_real/plot_tdoa.py
-  ```
+    *This generates a `tdma_security_log.csv` file containing the telemetry.*
+
+5.  **Visualize Results**:
+    Use the provided Python script to generate the 3D plots and error analysis:
+    ```bash
+    python3 scratch/plot_tdoa.py
+    ```
+
 ---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+Copyright (c) 2025 Jacopo
