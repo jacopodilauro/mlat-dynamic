@@ -5,12 +5,12 @@
 </p>
 
 <p align="center">
-<img width="360" height="300" alt="3 _Analisi_Comparativa_Target_0_img2" src="https://github.com/user-attachments/assets/cdaf00f2-25f8-474d-ba3a-2ec90b706da5" />
+  <img width="60%" alt="Confronto Stime Target 0" src="images/img_traject2.png" />
 </p>
 
 ---
 
-## 📖 Overview
+## Overview
 
 This project implements a **Distributed Extended Kalman Filter (EKF)** framework within **ns-3** to simulate autonomous drone swarms utilizing **Ultra-Wideband (UWB)** technology. It focuses on **Time Difference of Arrival (TDoA)** multilateration to estimate relative positions without relying solely on GPS.
 
@@ -24,13 +24,13 @@ Crucially, it includes a **Cyber-Physical Security Layer** designed to detect **
 
 ---
 
-## 📊 Simulation Results
+## Simulation Results
 
 ### 1. 3D Trajectory Reconstruction vs. Attack
 The system tracks the true trajectory of the target. When a **GPS Spoofing attack** occurs (Red dashed line), the EKF estimates (Blue/colored lines) maintain the physics-based trajectory, revealing the discrepancy.
 
 <p align="center">
-  <img src="images/3._Traiettorie_3D_Paper.png" alt="Trajectory Reconstruction" width="80%">
+  <img src="images/traject_1_spoofing.png" alt="Trajectory Reconstruction" width="60%">
 </p>
 
 ### 2. Security Alarm System
@@ -39,12 +39,12 @@ The plot below demonstrates the **Anomaly Detection** mechanism.
 * **Bottom:** When the attack starts (approx. t=200s), the **Discrepancy (Residual)** between the claimed GPS and the TDoA estimate spikes, triggering the **ALARM ACTIVE** state (Red Zone).
 
 <p align="center">
-  <img src="images/allarme.png" alt="Alarm and Error Analysis" width="90%">
+  <img src="images/allarme.png" alt="Alarm and Error Analysis" width="60%">
 </p>
 
 ---
 
-## 🛠 Technical Architecture
+## Technical Architecture
 
 ### The UWB Channel Model
 Custom `UWBChannel` class simulating environmental effects based on IEEE 802.15.4a standards:
@@ -63,7 +63,7 @@ If $\epsilon > \text{Threshold}_{safety}$ consistently, the node is flagged as *
 
 ---
 
-## 📦 Dependencies
+## Dependencies
 
 To build and run this simulation, ensure you have the following installed:
 
@@ -75,7 +75,7 @@ To build and run this simulation, ensure you have the following installed:
 
 ---
 
-## 🚀 Installation & Usage
+## Installation & Usage
 
 1.  **Clone the repository**:
     ```bash
