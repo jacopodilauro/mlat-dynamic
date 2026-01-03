@@ -56,11 +56,6 @@ Each drone maintains a state vector $\mathbf{x}$ for every neighbor:
 $$\mathbf{x} = [x, y, z, v_x, v_y, v_z, \delta t]^T$$
 Where $\delta t$ represents the clock bias relative to the observer.
 
-### Security Logic
-The node calculates the **Residual ($\epsilon$)**:
-$$\epsilon = || \mathbf{P}_{estimated} - \mathbf{P}_{claimed} ||$$
-If $\epsilon > \text{Threshold}_{safety}$ consistently, the node is flagged as **Malicious**.
-
 ---
 
 ## Dependencies
